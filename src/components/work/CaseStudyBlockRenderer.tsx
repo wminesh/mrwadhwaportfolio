@@ -9,6 +9,12 @@ interface CaseStudyBlockRendererProps {
   blocks: CaseStudyBlock[];
 }
 
+function withBasePath(src: string): string {
+  if (!src.startsWith("/")) return src;
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+  return `${basePath}${src}`;
+}
+
 function BlockHeading({ children }: { children?: string }) {
   if (!children) return null;
   return (
@@ -68,7 +74,7 @@ function AbSwitcherBlock({
       <div className="mt-4 grid grid-cols-1 gap-5 border-t border-hairline pt-4 md:grid-cols-12 md:items-center">
         <div className="overflow-hidden border border-hairline bg-surface md:col-span-7">
           <Image
-            src={active.image}
+            src={withBasePath(active.image)}
             alt={`${active.label} creative variant`}
             width={active.width}
             height={active.height}
@@ -438,7 +444,7 @@ export function CaseStudyBlockRenderer({
                     item.kind === "pdf" ? (
                       <a
                         key={item.src}
-                        href={item.src}
+                        href={withBasePath(item.src)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="group flex flex-col justify-between border border-hairline bg-canvas p-5 transition-colors hover:border-signal/60 hover:bg-surface-hover"
@@ -478,7 +484,7 @@ export function CaseStudyBlockRenderer({
                             </span>
                           ) : null}
                           <Image
-                            src={item.src}
+                            src={withBasePath(item.src)}
                             alt={item.alt}
                             width={item.width ?? 1200}
                             height={item.height ?? 800}
