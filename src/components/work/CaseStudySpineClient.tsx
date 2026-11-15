@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import type { CaseStudyBeat } from "@/data/portfolio";
 import { TagPill } from "@/components/ui/TagPill";
+import { CaseStudyBlockRenderer } from "@/components/work/CaseStudyBlockRenderer";
 
 interface CaseStudySpineClientProps {
   beats: CaseStudyBeat[];
@@ -88,16 +89,20 @@ export function CaseStudySpineClient({ beats }: CaseStudySpineClientProps) {
                   variant={beat.status === "verified" ? "default" : "muted"}
                 >
                   {beat.status === "verified"
-                    ? "Verified from CV"
+                    ? "Verified"
                     : "Lorem Ipsum Placeholder"}
                 </TagPill>
               </div>
               <h2 className="mt-3 font-display text-3xl tracking-wide text-ink-primary">
                 {beat.title}
               </h2>
-              <p className="mt-3 max-w-prose text-base leading-relaxed text-ink-secondary">
-                {beat.content}
-              </p>
+              {beat.blocks?.length ? (
+                <CaseStudyBlockRenderer blocks={beat.blocks} />
+              ) : (
+                <p className="mt-3 max-w-prose text-base leading-relaxed text-ink-secondary">
+                  {beat.content}
+                </p>
+              )}
             </article>
           );
         })}

@@ -71,18 +71,41 @@ export default async function CaseStudyPage({
           </div>
         </header>
 
+        {study.causalStrip?.length ? (
+          <section
+            aria-label="Causal summary"
+            className="grid grid-cols-1 border-b border-l border-hairline sm:grid-cols-2 lg:grid-cols-4"
+          >
+            {study.causalStrip.map((item, idx) => (
+              <div
+                key={item.step}
+                className="border-r border-hairline bg-surface p-5"
+              >
+                <p className="font-mono text-[11px] tracking-widest text-signal uppercase">
+                  {String(idx + 1).padStart(2, "0")} {"//"} {item.step}
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-ink-primary">
+                  {item.value}
+                </p>
+              </div>
+            ))}
+          </section>
+        ) : null}
+
         <CaseStudySpineClient beats={study.beats} />
 
-        <aside className="mt-12 border border-signal/35 bg-signal/5 p-7">
-          <p className="font-mono text-xs tracking-widest text-signal uppercase">
-            [EVIDENCE GAPS TO FILL BEFORE PUBLISH]
-          </p>
-          <ul className="mt-4 list-disc space-y-2 pl-5 text-sm text-ink-secondary">
-            {study.evidenceGaps.map((gap) => (
-              <li key={gap}>{gap}</li>
-            ))}
-          </ul>
-        </aside>
+        {study.evidenceGaps.length > 0 ? (
+          <aside className="mt-12 border border-signal/35 bg-signal/5 p-7">
+            <p className="font-mono text-xs tracking-widest text-signal uppercase">
+              [EVIDENCE GAPS TO FILL BEFORE PUBLISH]
+            </p>
+            <ul className="mt-4 list-disc space-y-2 pl-5 text-sm text-ink-secondary">
+              {study.evidenceGaps.map((gap) => (
+                <li key={gap}>{gap}</li>
+              ))}
+            </ul>
+          </aside>
+        ) : null}
 
         <nav
           aria-label="Case study pagination"

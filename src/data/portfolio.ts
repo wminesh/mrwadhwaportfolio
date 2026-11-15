@@ -12,11 +12,102 @@ export interface ProofMetric {
   };
 }
 
+export type CaseStudyBlock =
+  | {
+      type: "prose";
+      paragraphs: string[];
+    }
+  | {
+      type: "list";
+      heading?: string;
+      ordered?: boolean;
+      items: { label?: string; text: string }[];
+    }
+  | {
+      type: "math";
+      heading?: string;
+      lines: {
+        key: string;
+        value: string;
+        note?: string;
+        highlight?: boolean;
+      }[];
+    }
+  | {
+      type: "comparison";
+      left: { badge: string; title: string; points: string[] };
+      right: { badge: string; title: string; points: string[] };
+    }
+  | {
+      type: "table";
+      columns: string[];
+      rows: string[][];
+    }
+  | {
+      type: "funnel";
+      heading?: string;
+      stages: {
+        stage: string;
+        metric: string;
+        share: string;
+        widthPct: number;
+        detail: string;
+      }[];
+    }
+  | {
+      type: "timeline";
+      heading?: string;
+      steps: { window: string; title: string; detail: string }[];
+    }
+  | {
+      type: "ab-switcher";
+      heading?: string;
+      intro?: string;
+      variants: {
+        id: string;
+        label: string;
+        metric: string;
+        audience: string;
+        image: string;
+        width: number;
+        height: number;
+        note: string;
+      }[];
+    }
+  | {
+      type: "channel-tabs";
+      heading?: string;
+      channels: {
+        id: string;
+        label: string;
+        metric: string;
+        cadence: string;
+        summary: string;
+        bullets: string[];
+      }[];
+    }
+  | {
+      type: "media-grid";
+      heading?: string;
+      columns?: 2 | 3;
+      items: {
+        src: string;
+        alt: string;
+        title?: string;
+        caption: string;
+        badge?: string;
+        width?: number;
+        height?: number;
+        kind?: "image" | "pdf";
+      }[];
+    };
+
 export interface CaseStudyBeat {
   beat: string;
   title: string;
   status: "verified" | "placeholder";
   content: string;
+  blocks?: CaseStudyBlock[];
 }
 
 const createPlaceholderBeats = (headlineSummary: string): CaseStudyBeat[] => [
@@ -100,6 +191,7 @@ export interface CaseStudy {
   heroMetricLabel: string;
   job: CaseStudyJob;
   metrics: { label: string; scope?: string }[];
+  causalStrip?: { step: string; value: string }[];
   beats: CaseStudyBeat[];
   evidenceGaps: string[];
 }
@@ -154,7 +246,7 @@ export const PROOF_METRICS: ProofMetric[] = [
   {
     id: "xcel-masterclasses",
     value: "2.5L+ SQLs",
-    label: "Byju's Xcel (+35% lead CVR)",
+    label: "Byju's Xcel (15%+ app push CTR)",
     scope: "ACTUAL",
     href: "/work/xcel-masterclasses",
     counter: { target: 2.5, decimals: 1, suffix: "L+ SQLs" },
@@ -212,29 +304,461 @@ export const FLAGSHIP_CASE_STUDIES: CaseStudy[] = [
     slug: "xcel-masterclasses",
     category: "EdTech & Growth",
     eyebrow: "Byju's · Senior PM · 2020–2023",
-    title: "2.5L+ sales-qualified leads at 35% higher conversion",
-    hook: "Rebuilt masterclass engagement journeys to turn top-of-funnel webinar interest into qualified sales leads.",
+    title: "2.5L+ deduplicated SQLs from live masterclasses",
+    hook: "Built a standalone live STEAM show and 7-channel funnel pulling 4L registrations and 15K SQLs per episode.",
     heroMetric: "2.5L+",
-    heroMetricLabel: "Sales-qualified leads",
+    heroMetricLabel: "Deduplicated SQLs",
     job: {
       company: "Byju's",
       role: "Senior Product Manager",
       period: "Jul 2020 – Apr 2023 · Bangalore",
     },
     metrics: [
-      { label: "2.5L+ SQLs", scope: "ACTUAL" },
-      { label: "+35% Lead CVR" },
-      { label: "Xcel Masterclasses" },
+      { label: "2.5L+ Deduplicated SQLs", scope: "24 EPS" },
+      { label: ">7% CTA CVR" },
+      { label: "15%+ App Push CTR" },
     ],
-    beats: createPlaceholderBeats(
-      "Led Byju's Xcel Masterclasses from webinar engagement through sales handoff, generating over 2.5L sales-qualified leads and lifting lead conversion rates by 35%."
-    ),
-    evidenceGaps: [
-      "Baseline lead-to-SQL conversion percentage",
-      "Measurement period for the 2.5L+ SQL count",
-      "Specific journey change that drove the +35% CVR",
-      "Rejected stakeholder request and reflection",
+    causalStrip: [
+      { step: "Before", value: "Home-demo visits & freemium app gates only" },
+      { step: "Mechanism", value: "Fortnightly STEAM show + Zoom phone/email gate" },
+      { step: "Behavior", value: "4L reg · 40K live · 15%+ app push CTR" },
+      { step: "Outcome", value: "2.5L+ deduplicated SQLs across 24 episodes" },
     ],
+    beats: [
+      {
+        beat: "01 // HEADLINE & PROOF",
+        title: "2.5L+ unique SQLs over 24 live episodes",
+        status: "verified",
+        content:
+          "Over 24 fortnightly episodes in 10 months (May–Feb), Xcel averaged 4L registrations, 40K live viewers, and 15K gross SQLs per show. Deduplicating repeat attendees across episodes yielded 2.5L+ unique sales-qualified leads.",
+        blocks: [
+          {
+            type: "prose",
+            paragraphs: [
+              "Over 24 fortnightly episodes in 10 months (May–Feb), Xcel averaged 4L registrations, 40K live viewers, and 15K gross SQLs per show. Deduplicating repeat attendees across episodes yielded 2.5L+ unique sales-qualified leads.",
+            ],
+          },
+          {
+            type: "math",
+            heading: "Per-Episode Funnel Math (24 Sessions, May–Feb)",
+            lines: [
+              {
+                key: "Avg Registrations / Episode",
+                value: "4,00,000",
+                note: "100% · Validated phone + email gate",
+              },
+              {
+                key: "Avg Live Viewership",
+                value: "40,000",
+                note: "10% attendance · 25K unpaid BTLA + 15K paid",
+              },
+              {
+                key: "Gross SQLs / Episode (MoFu + BoFu)",
+                value: "15,000",
+                note: "60% of unpaid viewers / 37.5% of live",
+              },
+              {
+                key: "Deduplicated SQLs (24 Episodes)",
+                value: "2.5L+",
+                note: "ACTUAL · Unique leads across all shows",
+                highlight: true,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        beat: "02 // BEFORE-STATE & STAKES",
+        title: "Acquisition depended on demo pitches",
+        status: "verified",
+        content:
+          "Before Xcel, leads came from home-demo visitors or freemium app usage, leaving no standalone brand format to pull Class 4–10 audiences on its own.",
+        blocks: [
+          {
+            type: "comparison",
+            left: {
+              badge: "Before Xcel",
+              title: "Demo-First Lead Capture",
+              points: [
+                "Users entered the funnel via quick home-demo visits or freemium app trials.",
+                "Every top-of-funnel pitch asked parents for a sales demo upfront.",
+                "No standalone property carried the Byju's name on its own merit.",
+              ],
+            },
+            right: {
+              badge: "With Xcel",
+              title: "Self-Marketable STEAM Show",
+              points: [
+                "Fortnightly celebrity-led masterclasses gave Class 4–10 students a free hook.",
+                "Microsite signup captured validated phone numbers and emails before any sales call.",
+                "Live attendance, app overlap, and contests scored intent automatically.",
+              ],
+            },
+          },
+        ],
+      },
+      {
+        beat: "03 // WHY IT WAS HARD",
+        title: "14-day live cycles with black-box ad metrics",
+        status: "verified",
+        content:
+          "Running a celebrity show every two weeks meant balancing media spend, channel fatigue, and strict usage rights under tight deadlines.",
+        blocks: [
+          {
+            type: "prose",
+            paragraphs: [
+              "Running a celebrity show every 14 days meant aligning content, studio production, paid media, and CRM drips before each broadcast.",
+            ],
+          },
+          {
+            type: "list",
+            heading: "Operational & Channel Constraints",
+            items: [
+              {
+                label: "Opaque PMax reporting",
+                text: "Google Performance Max hid CTR, CVR, and ROAS at the asset-group level, forcing rapid 1-week spend-velocity tests instead of slow split runs.",
+              },
+              {
+                label: "Phone spam ceiling",
+                text: "SMS and WhatsApp had to be capped around 7L texts per episode (versus 12L emails) to avoid opt-out spikes.",
+              },
+              {
+                label: "6-month guest rights",
+                text: "Celebrity collaboration reels, live stories, and behind-the-scenes clips expired under a strict 6-month usage window.",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        beat: "04 // REJECTED FIX & TRADE-OFF",
+        title: "Why we split the broadcast and CTAs",
+        status: "verified",
+        content:
+          "Streaming everyone on public YouTube with one generic ad CTA would have leaked identity data and underperformed across parents and students.",
+        blocks: [
+          {
+            type: "prose",
+            paragraphs: [
+              "Running one broadcast link and one generic CTA across every ad would have dropped identity capture for free users and blurred parent vs. student intent.",
+            ],
+          },
+          {
+            type: "table",
+            columns: ["Decision", "Naive Option", "Why Rejected", "Shipped Call"],
+            rows: [
+              [
+                "Broadcast Surface",
+                "Stream everyone on public YouTube",
+                "Zero registration gate or phone/email capture for free prospects",
+                "Split surfaces: gated Zoom for free users; unlisted YouTube (made private after) for paid users.",
+              ],
+              [
+                "Ad & Push CTAs",
+                "Use one static CTA across creatives",
+                "Parents and students responded to different urgency triggers",
+                "A/B tested 3 CTAs across 10K+ impressions and routed winners by channel.",
+              ],
+              [
+                "Text Volume",
+                "Mirror 12L email volume on SMS/WhatsApp",
+                "High spam fatigue and opt-out risk on personal phones",
+                "Restricted texts to 7L per show for signup confirmation and session reminders only.",
+              ],
+            ],
+          },
+        ],
+      },
+      {
+        beat: "05 // PRODUCT DECISION",
+        title: "Three-tier funnel meets 3-Unpack show design",
+        status: "verified",
+        content:
+          "Free users registered once on the microsite, then flowed through ToF, MoF, and BoF scoring while the live show followed an Unpack 1-2-3 arc.",
+        blocks: [
+          {
+            type: "prose",
+            paragraphs: [
+              "Free users registered on the microsite with validated phone numbers and email IDs, letting us stitch participation across live Zoom attendance, BTLA app overlap, and blog contests.",
+            ],
+          },
+          {
+            type: "funnel",
+            heading: "Lead Qualification Funnel (Per Episode Average)",
+            stages: [
+              {
+                stage: "01 // Top of Funnel (ToF)",
+                metric: "4L Registrations",
+                share: "100%",
+                widthPct: 100,
+                detail: "Microsite signups with validated phone number and email ID.",
+              },
+              {
+                stage: "02 // Middle of Funnel (MoF)",
+                metric: "25K Unpaid Live Viewers",
+                share: "6.25% of Reg",
+                widthPct: 58,
+                detail: "Session viewers cross-referenced against non-premium BTLA app users (plus 15K paid viewers on YouTube).",
+              },
+              {
+                stage: "03 // Bottom of Funnel (BoF)",
+                metric: "15K SQLs (MoFu + BoFu)",
+                share: "3.75% of Reg",
+                widthPct: 34,
+                detail: "High-intent leads active across blog contests, post-session quizzes, and follow-up emails.",
+              },
+            ],
+          },
+          {
+            type: "ab-switcher",
+            heading: "CTA A/B Test (PMax · 10,000+ Impressions · ~3,333 / Variant)",
+            intro:
+              "Identical creative, identical placement. Only the button copy changed—switch tabs to inspect each variant and segment result.",
+            variants: [
+              {
+                id: "register-now",
+                label: "Register Now",
+                metric: ">7% CVR · Winner",
+                audience: "All Demographics",
+                image: "/work/xcel/cta-register-now.png",
+                width: 1000,
+                height: 500,
+                note: "Clear overall winner across segments; became the baseline ad CTA alongside \"Register for Free\" in later cycles.",
+              },
+              {
+                id: "join-now",
+                label: "Join Now",
+                metric: "Push Winner",
+                audience: "Students & Live Urgency",
+                image: "/work/xcel/cta-join-now.png",
+                width: 1000,
+                height: 500,
+                note: "Strongest pull with younger audiences and live-session urgency; deployed directly into in-app Push Notifications.",
+              },
+              {
+                id: "know-more",
+                label: "Know More",
+                metric: "Parent Segment",
+                audience: "Parents (Ages 35–45)",
+                image: "/work/xcel/cta-know-more.png",
+                width: 1000,
+                height: 500,
+                note: "Performed best with older audiences who wanted guest and curriculum context before committing a phone number.",
+              },
+            ],
+          },
+          {
+            type: "media-grid",
+            heading: "Live Show Structure: 3-Unpack Storyboards",
+            columns: 2,
+            items: [
+              {
+                src: "/work/xcel/brief-creative-1.png",
+                alt: "Flight and aerodynamics 3-Unpack episode storyboard",
+                badge: "Aerodynamics",
+                caption:
+                  "Unpack 1–3 flow mixing live demos, Bernoulli experiments, 3D cockpit visuals, and a DIY paper-plane challenge.",
+                width: 679,
+                height: 367,
+              },
+              {
+                src: "/work/xcel/brief-creative-2.png",
+                alt: "Physics of sound 3-Unpack episode storyboard",
+                badge: "Physics of Sound",
+                caption:
+                  "Structured transitions from water-cup vibrations to wine-glass resonance and DIY rubber-band guitars.",
+                width: 1313,
+                height: 710,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        beat: "06 // EXECUTION & CONSTRAINTS",
+        title: "The 14-day sprint and Rockets episode trail",
+        status: "verified",
+        content:
+          "Every fortnightly episode ran on a locked 14-day promotion cadence across Paid Ads, SEO contests, App Push, Social, Email, and post-show Snapshot PDFs.",
+        blocks: [
+          {
+            type: "timeline",
+            heading: "Fortnightly Promotion Cadence (Anchored to Session Day T-0)",
+            steps: [
+              {
+                window: "T-20D",
+                title: "Brief & Concept Lock",
+                detail: "Align content, guest theme, and Unpack 1–2–3 flow across teams.",
+              },
+              {
+                window: "T-15D → T-1D",
+                title: "Paid Ads & SEO Contests",
+                detail: "Launch PMax + Meta (3 videos, 5 statics) alongside backlinked AMP topic blogs and pre-show contests.",
+              },
+              {
+                window: "T-13D → T-0",
+                title: "App Push, Social & Drips",
+                detail: "5-step push cadence on 8M BTLA base, Instagram reels, 12L emails, and 7L SMS/WhatsApp reminders.",
+              },
+              {
+                window: "T-0",
+                title: "Split Live Broadcast",
+                detail: "Paid users on unlisted YouTube; free users on gated Zoom; contest winners announced on air.",
+              },
+              {
+                window: "T+1D → T+5D",
+                title: "Highlights & Snapshot PDF",
+                detail: "Ship session highlights, DIY experiment shorts, quiz certificates, and The Snapshot guide.",
+              },
+            ],
+          },
+          {
+            type: "channel-tabs",
+            heading: "7-Channel Engine (Click to Inspect Volume & Role)",
+            channels: [
+              {
+                id: "push",
+                label: "App Push",
+                metric: "15%+ CTR",
+                cadence: "8M Grade 4–10 Base",
+                summary:
+                  "Five timed notifications across Byju's The Learning App drove our highest-efficiency registration and live-join lift.",
+                bullets: [
+                  "Sequence: Registration → T-2d → T-1d → Starts Soon → Highlights Preview.",
+                  "Paired \"Join Now\" urgency copy with live-session entry links.",
+                ],
+              },
+              {
+                id: "email",
+                label: "Email",
+                metric: "12L / Episode",
+                cadence: "4-Stage Drip",
+                summary:
+                  "Rich-text email campaigns carried the storytelling load before and after every show.",
+                bullets: [
+                  "Promotional announcements, behind-the-scenes sneak peeks, and timed reminders.",
+                  "Post-show follow-ups delivered celebrity autographs and The Snapshot PDF.",
+                ],
+              },
+              {
+                id: "sms",
+                label: "SMS & WhatsApp",
+                metric: "7L / Episode",
+                cadence: "2-Touch Cap",
+                summary:
+                  "Kept strictly plain-text and intentionally half the email volume to protect phone opt-outs.",
+                bullets: [
+                  "Sent only for Registration Complete confirmations and T-0 Session Reminders.",
+                ],
+              },
+              {
+                id: "seo",
+                label: "SEO & Contests",
+                metric: "100s of Entries",
+                cadence: "T-15d → T-0",
+                summary:
+                  "Topic blogs and live-announced contests turned passive readers into higher-scored SQLs.",
+                bullets: [
+                  "Published AMP-ready topic posts backlinked across blog.byjus.com.",
+                  "Free users who submitted contest entries received higher lead scores.",
+                ],
+              },
+              {
+                id: "video-social",
+                label: "Video & Social",
+                metric: "10K+ Views / Vid",
+                cadence: "70% IG Audience",
+                summary:
+                  "Short-form reels, promos, and DIY science breakdowns kept momentum between live dates.",
+                bullets: [
+                  "Surveys showed 70% of target users active on Instagram, driving collab reels and BTS stories.",
+                  "2+ videos per episode: pre-show promo, highlights, plus standalone DIY experiments.",
+                ],
+              },
+            ],
+          },
+          {
+            type: "media-grid",
+            heading: "One Episode End-to-End: \"It's Rocket Science!\" (Aug 14 · AgniKul Cosmos)",
+            columns: 3,
+            items: [
+              {
+                src: "/work/xcel/email-sample-2.jpg",
+                alt: "Byju's Xcel Rocket Science promotional email with Srinath Ravichandran",
+                badge: "Promo Email",
+                caption: "Email teaser introducing AgniKul Cosmos co-founder Srinath Ravichandran and registration CTA.",
+                width: 600,
+                height: 1360,
+              },
+              {
+                src: "/work/xcel/social-ig-1.png",
+                alt: "Byju's Xcel All About Rockets Instagram Reel cover",
+                badge: "Instagram Reel",
+                caption: "Social reel built for the 70% student/parent overlap active on Instagram.",
+                width: 1963,
+                height: 1963,
+              },
+              {
+                src: "/work/xcel/rocket-snapshot.pdf",
+                alt: "It's Rocket Science 4-page illustrated Snapshot PDF",
+                badge: "Post-Show PDF",
+                title: "The Snapshot: Rocket Science (4-Page DIY Guide)",
+                caption: "Most requested post-session asset: matchbox rocket experiment plus core physics takeaways.",
+                kind: "pdf",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        beat: "07 // MEASURED OUTCOME",
+        title: "Verified funnel and channel outcomes",
+        status: "verified",
+        content:
+          "Across 24 sessions in 10 months, Xcel generated 2.5L+ deduplicated SQLs, >7% CTA conversion in A/B testing, and 15%+ app push CTR.",
+        blocks: [
+          {
+            type: "list",
+            heading: "Production Results Across 24 Sessions (May–Feb)",
+            items: [
+              {
+                label: "2.5L+ Deduplicated SQLs",
+                text: "Unique MoFu/BoFu leads passed to sales after deduplicating repeat attendees across 24 shows (15K gross SQLs per episode).",
+              },
+              {
+                label: "4L Registrations → 40K Live Viewers",
+                text: "Averaged 10% registration-to-attendance per show (25K unpaid BTLA users + 15K paid users).",
+              },
+              {
+                label: ">7% CTA Conversion",
+                text: "\"Register Now\" led the 10,000+ impression PMax CTA experiment (~3,333 impressions per variant).",
+              },
+              {
+                label: "15%+ App Push CTR",
+                text: "Five-step notification cadence across 8M grade 4–10 users inside Byju's The Learning App.",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        beat: "08 // REFLECTION",
+        title: "Keep the rapid tests; wire sales in earlier",
+        status: "verified",
+        content:
+          "Consistent format shifting and A/B testing kept performance sharp across 24 episodes; next time I would embed sales follow-up hooks directly into show planning.",
+        blocks: [
+          {
+            type: "prose",
+            paragraphs: [
+              "Two calls stood out. Consistent format shifting and constant A/B testing across CTAs, push timing, and content formats kept engagement from going stale over 24 episodes.",
+              "If I ran Xcel again, I'd build tighter ties with the sales team from day one. Embedding their follow-up hooks directly into show planning would realize revenue faster instead of treating handoff as a post-show step.",
+            ],
+          },
+        ],
+      },
+    ],
+    evidenceGaps: [],
   },
   {
     index: "03",
@@ -427,7 +951,7 @@ export const EXPERIENCE_LEDGER: ExperienceItem[] = [
         metric: "2.5L+",
         unit: "SQLs",
         detail:
-          "Sales-qualified leads generated on Byju's Xcel Masterclasses with +35% lead conversion.",
+          "Deduplicated sales-qualified leads generated on Byju's Xcel Masterclasses across 24 episodes (>7% CTA CVR, 15%+ push CTR).",
       },
       {
         metric: "12",

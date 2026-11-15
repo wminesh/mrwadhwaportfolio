@@ -139,7 +139,7 @@ export default function DesignSystemPage() {
             />
             <MetricCell
               value="2.5L+ SQLs"
-              label="Generated on Byju's Xcel (+35% lead CVR)"
+              label="Byju's Xcel (15%+ app push CTR)"
               scope="ACTUAL"
             />
           </div>
