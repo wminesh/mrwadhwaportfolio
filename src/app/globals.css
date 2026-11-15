@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+:root {
+  --bg-canvas: #090a0c;
+  --bg-surface: #111318;
+  --bg-surface-hover: #171a21;
+  --border-hairline: #232730;
+  --ink-primary: #f4f3ee;
+  --ink-secondary: #9ca3af;
+  --ink-muted: #5e6673;
+  --accent-signal: #ff5c28;
+  --accent-signal-dim: rgba(255, 92, 40, 0.12);
+}
+
+@theme inline {
+  --color-canvas: var(--bg-canvas);
+  --color-surface: var(--bg-surface);
+  --color-surface-hover: var(--bg-surface-hover);
+  --color-hairline: var(--border-hairline);
+  --color-ink-primary: var(--ink-primary);
+  --color-ink-secondary: var(--ink-secondary);
+  --color-ink-muted: var(--ink-muted);
+  --color-signal: var(--accent-signal);
+
+  --font-display: var(--font-bebas-neue);
+  --font-serif: var(--font-lora);
+  --font-sans: var(--font-plus-jakarta);
+  --font-mono: var(--font-jetbrains-mono);
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+body {
+  background-color: var(--bg-canvas);
+  color: var(--ink-primary);
+  font-family: var(--font-plus-jakarta), system-ui, sans-serif;
+}
