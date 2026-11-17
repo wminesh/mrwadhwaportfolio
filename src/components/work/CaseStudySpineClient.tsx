@@ -5,9 +5,15 @@ import type { CaseStudyBeat } from "@/data/portfolio";
 import { TagPill } from "@/components/ui/TagPill";
 import { CaseStudyBlockRenderer } from "@/components/work/CaseStudyBlockRenderer";
 
+export type CaseStudyReadingMode = "tldr" | "full";
+
 interface CaseStudySpineClientProps {
   beats: CaseStudyBeat[];
+  mode?: CaseStudyReadingMode;
 }
+
+const TLDR_PLACEHOLDER_COPY =
+  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";
 
 const DEFAULT_HEADER_HEIGHT_PX = 61;
 const CURSOR_PILL_GAP_PX = 24;
@@ -22,7 +28,10 @@ const slugifyBeat = (beat: string) =>
  * continuous hover hitbox, top-left precision focus pointer + heading pill,
  * and full-width 12-column hybrid beat cards.
  */
-export function CaseStudySpineClient({ beats }: CaseStudySpineClientProps) {
+export function CaseStudySpineClient({
+  beats,
+  mode = "tldr",
+}: CaseStudySpineClientProps) {
   const steps = beats.map((beat, idx) => ({
     ...beat,
     id: slugifyBeat(beat.beat),
@@ -229,18 +238,20 @@ export function CaseStudySpineClient({ beats }: CaseStudySpineClientProps) {
               <span className="font-mono text-xs tracking-widest text-signal uppercase">
                 {step.beat}
               </span>
-              {step.status !== "verified" ? (
+              {step.status !== "verified" || (mode === "tldr" && !step.tldr) ? (
                 <TagPill variant="muted">Lorem Ipsum Placeholder</TagPill>
               ) : null}
             </div>
             <h2 className="font-display text-3xl tracking-wide text-ink-primary">
               {step.title}
             </h2>
-            {step.blocks?.length ? (
+            {mode !== "tldr" && step.blocks?.length ? (
               <CaseStudyBlockRenderer blocks={step.blocks} />
             ) : (
               <p className="mt-3 max-w-prose text-base leading-relaxed text-ink-secondary">
-                {step.content}
+                {mode === "tldr"
+                  ? (step.tldr ?? TLDR_PLACEHOLDER_COPY)
+                  : step.content}
               </p>
             )}
           </article>

@@ -4,6 +4,7 @@ export const xcelMasterclassesStudy: CaseStudy = {
   index: "02",
   slug: "xcel-masterclasses",
   category: "EdTech & Growth",
+  tags: ["EdTech & Growth", "Live Funnel", "Lead Qualification"],
   eyebrow: "Byju's · Senior Product Manager · 2020–2023",
   title: "250,000+ qualified leads from gated live masterclasses",
   hook: "Replaced cold home-demo requests with a gated fortnightly live show, passing 15,000 sales-qualified leads per episode to sales.",
@@ -14,7 +15,6 @@ export const xcelMasterclassesStudy: CaseStudy = {
     role: "Senior Product Manager",
     period: "Jul 2020 – Apr 2023 · Bangalore",
   },
-  showHeaderMetrics: false,
   metrics: [
     { label: "250,000+ Unique SQLs", scope: "24 sessions · 10 mos" },
     { label: "15,000 SQLs / Episode", scope: "Deduplicated" },
@@ -35,7 +35,7 @@ export const xcelMasterclassesStudy: CaseStudy = {
         {
           type: "prose",
           paragraphs: [
-            "Parents of students in classes 4–10 saw top-of-funnel ads asking for an in-home sales demo upfront, or entered free app trials with no mid-funnel intent signal. Cold demo requests drove high drop-off and wasted field-sales capacity, while free app sign-ups left sales guessing who was ready to buy (exact pre-Xcel demo booking rate, acquisition cost, and baseline lead volume are flagged in Evidence Gaps).",
+            "Parents of students in classes 4–10 saw top-of-funnel ads asking for an in-home sales demo upfront, or entered free app trials with no mid-funnel intent signal. Cold demo requests drove high drop-off and wasted field-sales capacity, while free app sign-ups left sales guessing who was ready to buy.",
             "Market context: India's EdTech sector hovered around US$7.5 billion in 2022–2023, with K–12 holding roughly 43% share (India Brand Equity Foundation). As EdTech venture funding fell from US$2.1 billion in 2022 to US$207 million in 2023, K–12 teams had to replace high-cost cold demo acquisition with lower-cost, higher-intent lead funnels.",
             "Target success metric: Generate at least 10,000 deduplicated sales-qualified leads (parents meeting sales-readiness criteria) per episode at a lower cost per lead than cold home-demo campaigns.",
           ],
@@ -268,7 +268,7 @@ export const xcelMasterclassesStudy: CaseStudy = {
               metric: "10,000+ Views / Video",
               cadence: "70% Instagram Audience",
               summary:
-                "Short clips, show trailers, and at-home science experiments kept momentum warm between live dates (survey sample size and date flagged in Evidence Gaps).",
+                "Short clips, show trailers, and at-home science experiments kept momentum warm between live dates.",
               bullets: [
                 "Internal user surveys reported 70% of target users active on Instagram, guiding guest collaboration reels and studio stories.",
                 "Two or more videos per episode: pre-show promo, highlights, plus hands-on science experiments.",
@@ -306,7 +306,7 @@ export const xcelMasterclassesStudy: CaseStudy = {
       title: "250,000+ unique qualified leads across 24 sessions",
       status: "verified",
       content:
-        "Over a 10-month run (May–February; exact calendar year flagged below), Xcel shifted Byju's from cold demo-first capture to a 250,000+ deduplicated SQL funnel.",
+        "Over a 10-month run (May–February), Xcel shifted Byju's from cold demo-first capture to a 250,000+ deduplicated SQL funnel.",
       blocks: [
         {
           type: "comparison",
@@ -316,7 +316,7 @@ export const xcelMasterclassesStudy: CaseStudy = {
             points: [
               "Top-of-funnel ads pushed home-demo visits before earning parent interest.",
               "Free app sign-ups lacked a structured mid-funnel intent signal.",
-              "Pre-Xcel SQL baseline, demo booking rate, and CPL are flagged in Evidence Gaps.",
+              "Sales teams called cold prospects without live-attendance or contest intent signals.",
             ],
           },
           right: {

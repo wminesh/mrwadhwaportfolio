@@ -113,6 +113,7 @@ export interface CaseStudyBeat {
   title: string;
   status: "verified" | "placeholder";
   content: string;
+  tldr?: string;
   blocks?: CaseStudyBlock[];
 }
 
@@ -131,7 +132,9 @@ export interface CaseStudyJob {
 export interface CaseStudy {
   index: string;
   slug: string;
+  href?: string;
   category: CaseStudyCategory;
+  tags: string[];
   eyebrow: string;
   title: string;
   hook: string;
@@ -139,7 +142,6 @@ export interface CaseStudy {
   heroMetricLabel: string;
   job: CaseStudyJob;
   metrics: { label: string; scope?: string }[];
-  showHeaderMetrics?: boolean;
   overview?: { label?: string; text: string };
   beats: CaseStudyBeat[];
   evidenceGaps: string[];

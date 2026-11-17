@@ -1,21 +1,35 @@
-import type { ReactNode } from "react";
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { TagPill } from "@/components/ui/TagPill";
-import { CaseStudySpineClient } from "@/components/work/CaseStudySpineClient";
-import { type CaseStudy, getAdjacentCaseStudies } from "@/data/projects";
+import {
+  type CaseStudyReadingMode,
+  CaseStudySpineClient,
+} from "@/components/work/CaseStudySpineClient";
+import {
+  type CaseStudy,
+  getAdjacentCaseStudies,
+  getCaseStudyHref,
+} from "@/data/projects";
 
 interface CaseStudyPageShellProps {
   study: CaseStudy;
-  children?: ReactNode;
 }
 
-export function CaseStudyPageShell({
-  study,
-  children,
-}: CaseStudyPageShellProps) {
+const READING_MODE_OPTIONS: readonly {
+  id: CaseStudyReadingMode;
+  label: string;
+}[] = [
+  { id: "tldr", label: "TLDR" },
+  { id: "full", label: "Read It All" },
+];
+
+export function CaseStudyPageShell({ study }: CaseStudyPageShellProps) {
+  const [mode, setMode] = useState<CaseStudyReadingMode>("tldr");
   const { prevStudy, nextStudy } = getAdjacentCaseStudies(study.slug);
 
   return (
@@ -41,22 +55,53 @@ export function CaseStudyPageShell({
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-ink-secondary">
             {study.hook}
           </p>
-          {study.showHeaderMetrics !== false && study.metrics.length > 0 ? (
-            <div className="mt-6 flex flex-wrap gap-2">
-              {study.metrics.map((metric, idx) => (
-                <TagPill
-                  key={metric.label}
-                  variant={idx === 0 ? "signal" : "default"}
-                  scope={metric.scope}
-                >
-                  {metric.label}
-                </TagPill>
-              ))}
+          <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
+            {study.metrics.length > 0 ? (
+              <div className="flex flex-wrap items-center gap-2">
+                {study.metrics.map((metric, idx) => (
+                  <TagPill
+                    key={metric.label}
+                    variant={idx === 0 ? "signal" : "default"}
+                    scope={metric.scope}
+                  >
+                    {metric.label}
+                  </TagPill>
+                ))}
+              </div>
+            ) : (
+              <div />
+            )}
+
+            <div
+              role="group"
+              aria-label="Reading mode"
+              className="inline-flex shrink-0 items-center border border-hairline bg-surface"
+            >
+              {READING_MODE_OPTIONS.map((option, idx) => {
+                const isSelected = mode === option.id;
+                return (
+                  <button
+                    key={option.id}
+                    type="button"
+                    aria-pressed={isSelected}
+                    onClick={() => setMode(option.id)}
+                    className={`cursor-pointer px-2.5 py-1 font-mono text-[11px] tracking-wider uppercase transition-colors ${
+                      idx > 0 ? "border-l border-hairline" : ""
+                    } ${
+                      isSelected
+                        ? "bg-signal font-medium text-canvas"
+                        : "text-ink-secondary hover:bg-surface-hover hover:text-ink-primary"
+                    }`}
+                  >
+                    {option.label}
+                  </button>
+                );
+              })}
             </div>
-          ) : null}
+          </div>
         </header>
 
-        {study.overview ? (
+        {mode === "full" && study.overview ? (
           <section
             aria-label="Project overview"
             className="border-b border-hairline bg-surface/70 px-6 py-6"
@@ -72,20 +117,7 @@ export function CaseStudyPageShell({
           </section>
         ) : null}
 
-        {children ?? <CaseStudySpineClient beats={study.beats} />}
-
-        {study.evidenceGaps.length > 0 ? (
-          <aside className="mt-12 border border-signal/35 bg-signal/5 p-7">
-            <p className="font-mono text-xs tracking-widest text-signal uppercase">
-              [EVIDENCE GAPS TO FILL BEFORE PUBLISH]
-            </p>
-            <ul className="mt-4 list-disc space-y-2 pl-5 text-sm text-ink-secondary">
-              {study.evidenceGaps.map((gap) => (
-                <li key={gap}>{gap}</li>
-              ))}
-            </ul>
-          </aside>
-        ) : null}
+        <CaseStudySpineClient beats={study.beats} mode={mode} />
 
         <nav
           aria-label="Case study pagination"
@@ -93,7 +125,7 @@ export function CaseStudyPageShell({
         >
           {prevStudy ? (
             <Link
-              href={`/work/${prevStudy.slug}`}
+              href={getCaseStudyHref(prevStudy)}
               className="group border-r border-b border-hairline bg-surface p-6 transition-colors hover:bg-surface-hover"
             >
               <span className="inline-flex items-center gap-1.5 font-mono text-xs text-ink-muted uppercase">
@@ -110,7 +142,7 @@ export function CaseStudyPageShell({
 
           {nextStudy ? (
             <Link
-              href={`/work/${nextStudy.slug}`}
+              href={getCaseStudyHref(nextStudy)}
               className="group border-r border-b border-hairline bg-surface p-6 text-left transition-colors hover:bg-surface-hover sm:text-right"
             >
               <span className="inline-flex items-center gap-1.5 font-mono text-xs text-ink-muted uppercase">

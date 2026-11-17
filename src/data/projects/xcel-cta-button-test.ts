@@ -4,6 +4,7 @@ export const xcelCtaButtonTestStudy: CaseStudy = {
   index: "02A",
   slug: "xcel-cta-button-test",
   category: "EdTech & Growth",
+  tags: ["EdTech & Growth", "A/B Experiment", "Ad Conversion"],
   eyebrow: "Byju's Xcel · Bounded Experiment · Growth",
   title: "Over 7% ad button conversion by matching copy to intent",
   hook: "Isolated button copy across 10,000+ ad impressions to replace one generic prompt with segment-matched registration labels.",
@@ -14,7 +15,6 @@ export const xcelCtaButtonTestStudy: CaseStudy = {
     role: "Senior Product Manager",
     period: "Jul 2020 – Apr 2023 · Bangalore",
   },
-  showHeaderMetrics: false,
   metrics: [
     { label: "Over 7% Conversion", scope: "Register Now" },
     { label: "10,000+ Impressions", scope: "~3,333 / variant" },
@@ -37,7 +37,7 @@ export const xcelCtaButtonTestStudy: CaseStudy = {
           paragraphs: [
             "Byju's Xcel promoted fortnightly live sessions across paid social ads and in-app alerts. Using one static button label across every placement treated parents evaluating a new show the same as students clicking a live-start alert.",
             "Testable assumptions: (1) Changing only the button label on identical artwork would shift click-to-registration conversion without touching media targeting. (2) Parents aged 35–45 needed low-commitment discovery copy before sharing a phone number, whereas general ad traffic responded to explicit registration.",
-            "Success threshold: Identify a clear winning label above the prior campaign button rate (exact pre-test baseline flagged in Evidence Gaps) across at least 10,000 total impressions.",
+            "Success threshold: Identify a clear winning label above the prior campaign button rate across at least 10,000 total impressions.",
           ],
         },
       ],

@@ -4,6 +4,7 @@ export const platformReliabilityStudy: CaseStudy = {
   index: "04",
   slug: "platform-reliability",
   category: "Enterprise Ops",
+  tags: ["Enterprise Ops", "99.99% Reliability", "Auto Recovery"],
   eyebrow: "Lowe's India · Senior Product Manager · 2024–Present",
   title: "About $10 million saved a year at 99.99% reliability",
   hook: "Unified six reliability stages into one ecosystem, cutting order cancellations while holding enterprise platforms at 99.99% reliability.",
@@ -14,7 +15,6 @@ export const platformReliabilityStudy: CaseStudy = {
     role: "Senior Product Manager",
     period: "Sep 2024 – Present · Bangalore",
   },
-  showHeaderMetrics: false,
   metrics: [
     { label: "About $10 Million Saved", scope: "Annual" },
     { label: "99.99% Platform Reliability" },
