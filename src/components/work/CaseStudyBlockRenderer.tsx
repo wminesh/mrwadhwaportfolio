@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { ArrowUpRight, FileText } from "lucide-react";
 import type { CaseStudyBlock } from "@/data/portfolio";
 
@@ -164,6 +165,92 @@ function ChannelTabsBlock({
                 className="mt-2 h-1.5 w-1.5 shrink-0 bg-signal"
               />
               <span>{bullet}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+function LifecycleBlock({
+  block,
+}: {
+  block: Extract<CaseStudyBlock, { type: "lifecycle" }>;
+}) {
+  const [selectedId, setSelectedId] = useState(block.stages[0]?.id ?? "");
+  const active =
+    block.stages.find((stage) => stage.id === selectedId) ?? block.stages[0];
+
+  if (!active) return null;
+
+  return (
+    <div className="border border-hairline bg-canvas p-5">
+      <BlockHeading>{block.heading}</BlockHeading>
+      {block.intro ? (
+        <p className="mb-4 max-w-prose text-sm leading-relaxed text-ink-secondary">
+          {block.intro}
+        </p>
+      ) : null}
+
+      <div
+        role="tablist"
+        aria-label={block.heading ?? "Lifecycle stages"}
+        className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6"
+      >
+        {block.stages.map((stage) => {
+          const isSelected = stage.id === active.id;
+          return (
+            <button
+              key={stage.id}
+              type="button"
+              role="tab"
+              aria-selected={isSelected}
+              onClick={() => setSelectedId(stage.id)}
+              className={`cursor-pointer border px-3 py-2.5 text-left transition-colors ${
+                isSelected
+                  ? "border-signal bg-signal text-canvas"
+                  : "border-hairline bg-surface text-ink-secondary hover:bg-surface-hover hover:text-ink-primary"
+              }`}
+            >
+              <span
+                className={`block font-mono text-[10px] tracking-widest uppercase ${
+                  isSelected ? "text-canvas/80" : "text-ink-muted"
+                }`}
+              >
+                {stage.step}
+              </span>
+              <span className="mt-1 block font-mono text-xs font-medium tracking-wider uppercase">
+                {stage.title}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="mt-4 border-t border-hairline pt-4">
+        <div className="flex flex-wrap items-baseline gap-2.5">
+          <span className="font-mono text-xs tracking-widest text-signal uppercase">
+            Stage {active.step}
+          </span>
+          <h3 className="font-display text-2xl tracking-wide text-ink-primary">
+            {active.title}
+          </h3>
+        </div>
+        <p className="mt-2 max-w-prose text-sm leading-relaxed text-ink-secondary">
+          {active.goal}
+        </p>
+        <ul className="mt-3 space-y-1.5">
+          {active.capabilities.map((capability) => (
+            <li
+              key={capability}
+              className="flex items-start gap-2.5 text-sm leading-relaxed text-ink-secondary"
+            >
+              <span
+                aria-hidden="true"
+                className="mt-2 h-1.5 w-1.5 shrink-0 bg-signal"
+              />
+              <span>{capability}</span>
             </li>
           ))}
         </ul>
@@ -433,6 +520,9 @@ export function CaseStudyBlockRenderer({
           case "channel-tabs":
             return <ChannelTabsBlock key={index} block={block} />;
 
+          case "lifecycle":
+            return <LifecycleBlock key={index} block={block} />;
+
           case "media-grid": {
             const colsClass =
               block.columns === 3 ? "md:grid-cols-3" : "md:grid-cols-2";
@@ -501,6 +591,33 @@ export function CaseStudyBlockRenderer({
               </div>
             );
           }
+
+          case "link-card":
+            return (
+              <Link
+                key={index}
+                href={block.href}
+                className="group flex flex-col justify-between gap-4 border border-hairline bg-canvas p-5 transition-colors hover:border-signal/60 hover:bg-surface-hover sm:flex-row sm:items-center"
+              >
+                <div className="space-y-1.5">
+                  {block.badge ? (
+                    <span className="inline-block border border-signal/35 bg-signal/10 px-2 py-0.5 font-mono text-[10px] tracking-wider text-signal uppercase">
+                      {block.badge}
+                    </span>
+                  ) : null}
+                  <p className="font-display text-2xl tracking-wide text-ink-primary group-hover:text-signal">
+                    {block.title}
+                  </p>
+                  <p className="max-w-prose text-sm leading-relaxed text-ink-secondary">
+                    {block.summary}
+                  </p>
+                </div>
+                <span className="inline-flex shrink-0 items-center gap-1.5 font-mono text-xs tracking-wider text-signal uppercase">
+                  {block.ctaLabel ?? "Read Case Study"}
+                  <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </span>
+              </Link>
+            );
 
           default:
             return null;

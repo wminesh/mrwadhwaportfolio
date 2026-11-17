@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import { ArrowUpRight } from "lucide-react";
-import { AmbientTelemetryCanvas } from "@/components/canvas/AmbientTelemetryCanvas";
+import { HeroTextInversionOverlay } from "@/components/canvas/HeroTextInversionOverlay";
 import { CareerTimeline } from "@/components/experience/CareerTimeline";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
@@ -22,8 +22,11 @@ import {
 } from "@/data/portfolio";
 import { gsap, useGSAP } from "@/lib/gsap";
 
+const HEADLINE_WORDS = SITE_META.heroHeadline.split(" ");
+
 export default function Home() {
   const rootRef = useRef<HTMLDivElement>(null);
+  const headlineRef = useRef<HTMLHeadingElement>(null);
 
   useGSAP(
     () => {
@@ -101,18 +104,27 @@ export default function Home() {
       <SvgFollowScroll initialProgress={0.5}>
         <main>
           <section className="relative w-full overflow-hidden">
-            <AmbientTelemetryCanvas hoverReveal />
-
             <div className="relative z-10 mx-auto flex min-h-[82vh] max-w-6xl flex-col justify-center px-6 py-16 sm:py-20">
               <div className="py-8">
                 <h1
+                  ref={headlineRef}
                   data-hero-reveal
+                  aria-label={SITE_META.heroHeadline}
                   className="max-w-5xl font-display text-5xl leading-[0.95] tracking-wide text-ink-primary sm:text-7xl"
                 >
-                  {SITE_META.heroHeadline}
+                  {HEADLINE_WORDS.map((word, idx) => (
+                    <span key={`${word}-${idx}`}>
+                      <span data-word aria-hidden="true">
+                        {word}
+                      </span>
+                      {idx < HEADLINE_WORDS.length - 1 ? " " : ""}
+                    </span>
+                  ))}
                 </h1>
               </div>
             </div>
+
+            <HeroTextInversionOverlay headlineRef={headlineRef} />
           </section>
 
           <div className="mx-auto max-w-6xl px-6">

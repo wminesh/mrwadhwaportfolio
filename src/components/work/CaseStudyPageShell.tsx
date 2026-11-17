@@ -1,39 +1,22 @@
+import type { ReactNode } from "react";
 import Link from "next/link";
-import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { TagPill } from "@/components/ui/TagPill";
 import { CaseStudySpineClient } from "@/components/work/CaseStudySpineClient";
-import { FLAGSHIP_CASE_STUDIES } from "@/data/portfolio";
+import { type CaseStudy, getAdjacentCaseStudies } from "@/data/projects";
 
-export function generateStaticParams() {
-  return FLAGSHIP_CASE_STUDIES.map((study) => ({
-    slug: study.slug,
-  }));
+interface CaseStudyPageShellProps {
+  study: CaseStudy;
+  children?: ReactNode;
 }
 
-export default async function CaseStudyPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const { slug } = await params;
-  const currentIndex = FLAGSHIP_CASE_STUDIES.findIndex(
-    (item) => item.slug === slug
-  );
-
-  if (currentIndex === -1) {
-    notFound();
-  }
-
-  const study = FLAGSHIP_CASE_STUDIES[currentIndex];
-  const prevStudy =
-    currentIndex > 0 ? FLAGSHIP_CASE_STUDIES[currentIndex - 1] : null;
-  const nextStudy =
-    currentIndex < FLAGSHIP_CASE_STUDIES.length - 1
-      ? FLAGSHIP_CASE_STUDIES[currentIndex + 1]
-      : null;
+export function CaseStudyPageShell({
+  study,
+  children,
+}: CaseStudyPageShellProps) {
+  const { prevStudy, nextStudy } = getAdjacentCaseStudies(study.slug);
 
   return (
     <div className="min-h-screen bg-canvas text-ink-primary">
@@ -58,41 +41,38 @@ export default async function CaseStudyPage({
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-ink-secondary">
             {study.hook}
           </p>
-          <div className="mt-6 flex flex-wrap gap-2">
-            {study.metrics.map((metric, idx) => (
-              <TagPill
-                key={metric.label}
-                variant={idx === 0 ? "signal" : "default"}
-                scope={metric.scope}
-              >
-                {metric.label}
-              </TagPill>
-            ))}
-          </div>
+          {study.showHeaderMetrics !== false && study.metrics.length > 0 ? (
+            <div className="mt-6 flex flex-wrap gap-2">
+              {study.metrics.map((metric, idx) => (
+                <TagPill
+                  key={metric.label}
+                  variant={idx === 0 ? "signal" : "default"}
+                  scope={metric.scope}
+                >
+                  {metric.label}
+                </TagPill>
+              ))}
+            </div>
+          ) : null}
         </header>
 
-        {study.causalStrip?.length ? (
+        {study.overview ? (
           <section
-            aria-label="Causal summary"
-            className="grid grid-cols-1 border-b border-l border-hairline sm:grid-cols-2 lg:grid-cols-4"
+            aria-label="Project overview"
+            className="border-b border-hairline bg-surface/70 px-6 py-6"
           >
-            {study.causalStrip.map((item, idx) => (
-              <div
-                key={item.step}
-                className="border-r border-hairline bg-surface p-5"
-              >
-                <p className="font-mono text-[11px] tracking-widest text-signal uppercase">
-                  {String(idx + 1).padStart(2, "0")} {"//"} {item.step}
-                </p>
-                <p className="mt-2 text-sm leading-relaxed text-ink-primary">
-                  {item.value}
-                </p>
-              </div>
-            ))}
+            {study.overview.label ? (
+              <p className="font-mono text-[11px] tracking-widest text-signal uppercase">
+                {study.overview.label}
+              </p>
+            ) : null}
+            <p className="mt-2 max-w-3xl text-base leading-relaxed text-ink-primary">
+              {study.overview.text}
+            </p>
           </section>
         ) : null}
 
-        <CaseStudySpineClient beats={study.beats} />
+        {children ?? <CaseStudySpineClient beats={study.beats} />}
 
         {study.evidenceGaps.length > 0 ? (
           <aside className="mt-12 border border-signal/35 bg-signal/5 p-7">

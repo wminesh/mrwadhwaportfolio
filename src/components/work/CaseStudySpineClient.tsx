@@ -47,23 +47,28 @@ export function CaseStudySpineClient({ beats }: CaseStudySpineClientProps) {
       <aside className="hidden lg:col-span-4 lg:block">
         <div className="sticky top-24 border border-hairline bg-surface p-5">
           <p className="border-b border-hairline pb-3 font-mono text-[11px] tracking-widest text-ink-muted uppercase">
-            Case Study Spine
+            Contents
           </p>
-          <ol className="mt-4 space-y-2">
-            {beats.map((beat) => {
+          <ol className="mt-4 space-y-2.5">
+            {beats.map((beat, idx) => {
               const id = slugifyBeat(beat.beat);
               const isActive = activeId === id;
               return (
                 <li key={id}>
                   <a
                     href={`#${id}`}
-                    className={`block border-l-2 py-1 pl-3 font-mono text-xs transition-colors ${
+                    className={`flex items-baseline gap-2.5 border-l-2 py-1 pl-3 text-xs leading-snug transition-colors ${
                       isActive
                         ? "border-signal text-signal"
                         : "border-transparent text-ink-secondary hover:border-hairline hover:text-ink-primary"
                     }`}
                   >
-                    {beat.beat}
+                    <span className="shrink-0 font-mono text-[11px] opacity-60">
+                      {String(idx + 1).padStart(2, "0")}
+                    </span>
+                    <span>
+                      {beat.status === "verified" ? beat.title : beat.beat}
+                    </span>
                   </a>
                 </li>
               );
@@ -81,19 +86,15 @@ export function CaseStudySpineClient({ beats }: CaseStudySpineClientProps) {
               id={id}
               className="scroll-mt-24 border border-hairline bg-surface p-7"
             >
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <span className="font-mono text-xs tracking-widest text-signal uppercase">
-                  {beat.beat}
-                </span>
-                <TagPill
-                  variant={beat.status === "verified" ? "default" : "muted"}
-                >
-                  {beat.status === "verified"
-                    ? "Verified"
-                    : "Lorem Ipsum Placeholder"}
-                </TagPill>
-              </div>
-              <h2 className="mt-3 font-display text-3xl tracking-wide text-ink-primary">
+              {beat.status !== "verified" ? (
+                <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+                  <span className="font-mono text-xs tracking-widest text-signal uppercase">
+                    {beat.beat}
+                  </span>
+                  <TagPill variant="muted">Lorem Ipsum Placeholder</TagPill>
+                </div>
+              ) : null}
+              <h2 className="font-display text-3xl tracking-wide text-ink-primary">
                 {beat.title}
               </h2>
               {beat.blocks?.length ? (
