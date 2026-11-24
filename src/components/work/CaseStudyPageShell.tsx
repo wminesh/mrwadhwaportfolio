@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { SiteHeader } from "@/components/layout/SiteHeader";
@@ -20,16 +20,31 @@ interface CaseStudyPageShellProps {
   study: CaseStudy;
 }
 
-const READING_MODE_OPTIONS: readonly {
-  id: CaseStudyReadingMode;
-  label: string;
-}[] = [
-  { id: "tldr", label: "TLDR" },
-  { id: "full", label: "Read It All" },
-];
-
 export function CaseStudyPageShell({ study }: CaseStudyPageShellProps) {
   const [mode, setMode] = useState<CaseStudyReadingMode>("tldr");
+  const isFull = mode === "full";
+  const tldrRef = useRef<HTMLSpanElement | null>(null);
+  const fullRef = useRef<HTMLSpanElement | null>(null);
+  const [thumbStyle, setThumbStyle] = useState<{
+    x: number;
+    width: number;
+  } | null>(null);
+
+  useEffect(() => {
+    const updateThumb = () => {
+      const activeEl = isFull ? fullRef.current : tldrRef.current;
+      if (!activeEl) return;
+      setThumbStyle({
+        x: activeEl.offsetLeft,
+        width: activeEl.offsetWidth,
+      });
+    };
+
+    updateThumb();
+    window.addEventListener("resize", updateThumb);
+    return () => window.removeEventListener("resize", updateThumb);
+  }, [isFull]);
+
   const { prevStudy, nextStudy } = getAdjacentCaseStudies(study.slug);
 
   return (
@@ -58,10 +73,10 @@ export function CaseStudyPageShell({ study }: CaseStudyPageShellProps) {
           <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
             {study.metrics.length > 0 ? (
               <div className="flex flex-wrap items-center gap-2">
-                {study.metrics.map((metric, idx) => (
+                {study.metrics.map((metric) => (
                   <TagPill
                     key={metric.label}
-                    variant={idx === 0 ? "signal" : "default"}
+                    variant="default"
                     scope={metric.scope}
                   >
                     {metric.label}
@@ -72,50 +87,57 @@ export function CaseStudyPageShell({ study }: CaseStudyPageShellProps) {
               <div />
             )}
 
-            <div
-              role="group"
-              aria-label="Reading mode"
-              className="inline-flex shrink-0 items-center border border-hairline bg-surface"
+            <button
+              type="button"
+              role="switch"
+              aria-checked={isFull}
+              aria-label="Toggle reading mode between TLDR and Read It All"
+              onClick={() =>
+                setMode((prev) => (prev === "tldr" ? "full" : "tldr"))
+              }
+              className={`relative inline-flex shrink-0 cursor-pointer items-center border p-0.5 font-mono text-[11px] tracking-wider uppercase select-none transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal ${
+                isFull
+                  ? "border-signal/60 bg-surface-hover"
+                  : "border-hairline bg-surface hover:border-ink-muted/60"
+              }`}
             >
-              {READING_MODE_OPTIONS.map((option, idx) => {
-                const isSelected = mode === option.id;
-                return (
-                  <button
-                    key={option.id}
-                    type="button"
-                    aria-pressed={isSelected}
-                    onClick={() => setMode(option.id)}
-                    className={`cursor-pointer px-2.5 py-1 font-mono text-[11px] tracking-wider uppercase transition-colors ${
-                      idx > 0 ? "border-l border-hairline" : ""
-                    } ${
-                      isSelected
-                        ? "bg-signal font-medium text-canvas"
-                        : "text-ink-secondary hover:bg-surface-hover hover:text-ink-primary"
-                    }`}
-                  >
-                    {option.label}
-                  </button>
-                );
-              })}
-            </div>
+              <span
+                aria-hidden="true"
+                style={
+                  thumbStyle
+                    ? {
+                        width: `${thumbStyle.width}px`,
+                        transform: `translate3d(${thumbStyle.x}px, 0, 0)`,
+                      }
+                    : undefined
+                }
+                className={`pointer-events-none absolute top-0.5 bottom-0.5 left-0 bg-signal transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                  thumbStyle ? "" : "left-0.5 w-[52px]"
+                }`}
+              />
+              <span
+                ref={tldrRef}
+                className={`relative z-10 px-2.5 py-0.5 transition-all duration-300 ${
+                  !isFull
+                    ? "scale-100 font-medium text-canvas"
+                    : "scale-95 text-ink-muted hover:text-ink-primary"
+                }`}
+              >
+                TLDR
+              </span>
+              <span
+                ref={fullRef}
+                className={`relative z-10 px-2.5 py-0.5 transition-all duration-300 ${
+                  isFull
+                    ? "scale-100 font-medium text-canvas"
+                    : "scale-95 text-ink-muted hover:text-ink-primary"
+                }`}
+              >
+                Read It All
+              </span>
+            </button>
           </div>
         </header>
-
-        {mode === "full" && study.overview ? (
-          <section
-            aria-label="Project overview"
-            className="border-b border-hairline bg-surface/70 px-6 py-6"
-          >
-            {study.overview.label ? (
-              <p className="font-mono text-[11px] tracking-widest text-signal uppercase">
-                {study.overview.label}
-              </p>
-            ) : null}
-            <p className="mt-2 max-w-3xl text-base leading-relaxed text-ink-primary">
-              {study.overview.text}
-            </p>
-          </section>
-        ) : null}
 
         <CaseStudySpineClient beats={study.beats} mode={mode} />
 

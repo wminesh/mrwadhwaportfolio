@@ -20,10 +20,6 @@ export const xcelCtaButtonTestStudy: CaseStudy = {
     { label: "10,000+ Impressions", scope: "~3,333 / variant" },
     { label: "3 Variants Tested", scope: "Identical creative" },
   ],
-  overview: {
-    label: "In Brief",
-    text: "Bounded task: Tested three ad button labels on identical artwork to lift Xcel Masterclasses registration conversion.",
-  },
   beats: [
     {
       beat: "01 // BEFORE-STATE & STAKES",

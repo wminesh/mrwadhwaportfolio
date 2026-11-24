@@ -13,12 +13,10 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SvgFollowScroll } from "@/components/ui/SvgFollowScroll";
 import { WorkShowcase } from "@/components/work/WorkShowcase";
 import {
-  EDUCATION_LIST,
-  EXPERIENCE_LEDGER,
+  CAREER_TIMELINE_EVENTS,
   FLAGSHIP_CASE_STUDIES,
   PROOF_METRICS,
   SITE_META,
-  SOCIAL_ENTREPRENEURSHIP,
 } from "@/data/portfolio";
 import { gsap, useGSAP } from "@/lib/gsap";
 
@@ -45,6 +43,18 @@ export default function Home() {
         clearProps: "transform,opacity",
       });
 
+      gsap.from("[data-proof-strip]", {
+        opacity: 0,
+        duration: 0.4,
+        ease: "power2.out",
+        clearProps: "opacity",
+        scrollTrigger: {
+          trigger: "[data-proof-strip]",
+          start: "top 86%",
+          once: true,
+        },
+      });
+
       gsap.from("[data-proof-cell]", {
         y: 20,
         opacity: 0,
@@ -58,24 +68,6 @@ export default function Home() {
           once: true,
         },
       });
-
-      gsap.utils
-        .toArray<HTMLElement>("[data-scroll-cue]")
-        .forEach((cueEl) => {
-          const direction = cueEl.dataset.cueAlign === "right" ? 20 : -20;
-          gsap.from(cueEl, {
-            x: direction,
-            opacity: 0,
-            duration: 0.55,
-            ease: "power2.out",
-            clearProps: "transform,opacity",
-            scrollTrigger: {
-              trigger: cueEl,
-              start: "top 86%",
-              once: true,
-            },
-          });
-        });
 
       gsap.utils
         .toArray<HTMLElement>("[data-section-reveal]")
@@ -147,23 +139,7 @@ export default function Home() {
               ))}
             </section>
 
-            <div className="py-14 sm:py-20">
-              <aside
-                data-scroll-cue
-                data-cue-align="left"
-                className="max-w-md border-l-2 border-signal bg-surface/75 px-5 py-4 backdrop-blur-sm"
-              >
-                <p className="font-mono text-[11px] tracking-widest text-signal uppercase">
-                  [INCOMING // 01 SELECTED WORK]
-                </p>
-                <p className="mt-2 font-serif text-base italic text-ink-primary">
-                  Five builds across Lowe&apos;s, Byju&apos;s, and HealthQ. Each
-                  tied to cycle time, conversion, revenue, or completion.
-                </p>
-              </aside>
-            </div>
-
-            <section id="work" className="scroll-mt-20">
+            <section id="work" className="mt-16 scroll-mt-20 sm:mt-24">
               <div data-section-reveal>
                 <SectionHeader
                   index="01"
@@ -175,23 +151,7 @@ export default function Home() {
               <WorkShowcase studies={FLAGSHIP_CASE_STUDIES} />
             </section>
 
-            <div className="flex justify-end py-14 sm:py-20">
-              <aside
-                data-scroll-cue
-                data-cue-align="right"
-                className="max-w-md border-r-2 border-signal bg-surface/75 px-5 py-4 text-left backdrop-blur-sm sm:text-right"
-              >
-                <p className="font-mono text-[11px] tracking-widest text-signal uppercase">
-                  [INCOMING // 02 CAREER CONSOLE]
-                </p>
-                <p className="mt-2 font-serif text-base italic text-ink-primary">
-                  10+ years across retail systems, EdTech, and growth. Inspect
-                  each chapter below.
-                </p>
-              </aside>
-            </div>
-
-            <section id="experience" className="scroll-mt-20">
+            <section id="experience" className="mt-16 scroll-mt-20 sm:mt-24">
               <div data-section-reveal>
                 <SectionHeader
                   index="02"
@@ -200,30 +160,10 @@ export default function Home() {
                   aside="10+ years across retail systems, EdTech, and growth."
                 />
               </div>
-              <CareerTimeline
-                roles={EXPERIENCE_LEDGER}
-                education={EDUCATION_LIST}
-                social={SOCIAL_ENTREPRENEURSHIP}
-              />
+              <CareerTimeline events={CAREER_TIMELINE_EVENTS} />
             </section>
 
-            <div className="py-14 sm:py-20">
-              <aside
-                data-scroll-cue
-                data-cue-align="left"
-                className="max-w-md border-l-2 border-signal bg-surface/75 px-5 py-4 backdrop-blur-sm"
-              >
-                <p className="font-mono text-[11px] tracking-widest text-signal uppercase">
-                  [INCOMING // 03 NEXT STEP]
-                </p>
-                <p className="mt-2 font-serif text-base italic text-ink-primary">
-                  Based in Bangalore. Ready to talk product systems,
-                  reliability, and growth.
-                </p>
-              </aside>
-            </div>
-
-            <section id="contact" data-section-reveal className="pb-10">
+            <section id="contact" data-section-reveal className="mt-16 pb-10 sm:mt-24">
               <div className="border border-hairline bg-surface/80 p-8 backdrop-blur-sm sm:p-12">
                 <p className="font-mono text-xs tracking-widest text-signal uppercase">
                   [03 {"//"} NEXT STEP]

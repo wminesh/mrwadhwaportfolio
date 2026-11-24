@@ -20,10 +20,6 @@ export const platformReliabilityStudy: CaseStudy = {
     { label: "99.99% Platform Reliability" },
     { label: "Six-Stage Lifecycle Ecosystem" },
   ],
-  overview: {
-    label: "In Brief",
-    text: "Engineering teams managed reliability through separate tools, leaving repeated incidents unresolved and leadership blind to platform health. We unified onboarding, protection, detection, recovery, learning, and automation into one system, cutting order cancellations by about $10 million annually while holding 99.99% reliability.",
-  },
   beats: [
     {
       beat: "01 // HEADLINE & PROOF",

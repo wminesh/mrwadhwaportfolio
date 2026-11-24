@@ -4,6 +4,7 @@ export const aiProcurementCatalogStudy: CaseStudy = {
   index: "01",
   slug: "ai-procurement-catalog",
   category: "Enterprise Ops",
+  tags: ["Enterprise Ops", "AI Catalog", "Store Setup"],
   eyebrow: "Lowe's India · Senior PM · 2024–Present",
   title: "20% faster store-setup procurement cycles",
   hook: "Replaced manual catalog lookups with AI-driven procurement for enterprise store setup teams.",

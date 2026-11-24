@@ -20,10 +20,6 @@ export const xcelMasterclassesStudy: CaseStudy = {
     { label: "15,000 SQLs / Episode", scope: "Deduplicated" },
     { label: "10% Live Attendance", scope: "400K → 40K / show" },
   ],
-  overview: {
-    label: "In Brief",
-    text: "Problem solving: A gated fortnightly live show earned parent interest before asking for a home-demo call.",
-  },
   beats: [
     {
       beat: "01 // BEFORE-STATE & STAKES",

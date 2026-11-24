@@ -4,6 +4,7 @@ export const tynkerAppRedesignStudy: CaseStudy = {
   index: "05",
   slug: "tynker-app-redesign",
   category: "Product",
+  tags: ["Product", "App Redesign", "Assessments & DIY"],
   eyebrow: "Byju's · Tynker · Senior PM · 2020–2023",
   title: "5% higher course completion on Tynker",
   hook: "Redesigned the Tynker app with structured assessments and DIY projects to keep learners finishing courses.",

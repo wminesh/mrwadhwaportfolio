@@ -1,4 +1,5 @@
 export * from "./projects";
+export * from "./timeline";
 
 export interface ProofMetric {
   id: string;

@@ -4,6 +4,7 @@ export const healthqRehabMarketingSetupStudy: CaseStudy = {
   index: "03",
   slug: "healthq-rehab-marketing-setup",
   category: "Marketing",
+  tags: ["Marketing", "SEO & Content", "Retention Loops"],
   eyebrow: "HealthQ Rehab · Head of Marketing · 2023",
   title: "35% organic traffic and 50% social lift",
   hook: "Rebuilt SEO content plus WhatsApp and Telegram retention channels for a rehab clinic.",

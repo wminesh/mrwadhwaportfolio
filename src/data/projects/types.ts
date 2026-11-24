@@ -142,7 +142,6 @@ export interface CaseStudy {
   heroMetricLabel: string;
   job: CaseStudyJob;
   metrics: { label: string; scope?: string }[];
-  overview?: { label?: string; text: string };
   beats: CaseStudyBeat[];
   evidenceGaps: string[];
 }

@@ -24,24 +24,25 @@ export const FLAGSHIP_CASE_STUDIES: CaseStudy[] = [
   tynkerAppRedesignStudy,
 ];
 
+export function getCaseStudyHref(study: Pick<CaseStudy, "slug" | "href">): string {
+  return study.href ?? `/work/${study.slug}`;
+}
+
 export function getAdjacentCaseStudies(slug: string): {
   prevStudy: CaseStudy | null;
   nextStudy: CaseStudy | null;
 } {
+  const total = FLAGSHIP_CASE_STUDIES.length;
   const currentIndex = FLAGSHIP_CASE_STUDIES.findIndex(
     (item) => item.slug === slug
   );
 
-  if (currentIndex === -1) {
+  if (currentIndex === -1 || total === 0) {
     return { prevStudy: null, nextStudy: null };
   }
 
   return {
-    prevStudy:
-      currentIndex > 0 ? FLAGSHIP_CASE_STUDIES[currentIndex - 1] : null,
-    nextStudy:
-      currentIndex < FLAGSHIP_CASE_STUDIES.length - 1
-        ? FLAGSHIP_CASE_STUDIES[currentIndex + 1]
-        : null,
+    prevStudy: FLAGSHIP_CASE_STUDIES[(currentIndex - 1 + total) % total],
+    nextStudy: FLAGSHIP_CASE_STUDIES[(currentIndex + 1) % total],
   };
 }
